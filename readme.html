@@ -30,12 +30,17 @@
       font-size: 3rem;
       margin-bottom: 20px;
       text-shadow: 0 0 10px #1f8ef1;
+      animation: fadeInDown 1.5s ease;
+    }
+    h2, h3 {
+      animation: fadeInUp 1.5s ease;
     }
     p {
       font-size: 1.2rem;
-      line-height: 1.6;
+      line-height: 1.5;
       margin-bottom: 30px;
       text-shadow: 0 0 6px rgba(31, 142, 241, 0.6);
+      animation: fadeIn 2s ease;
     }
     a.button {
       display: inline-block;
@@ -49,10 +54,24 @@
       box-shadow: 0 4px 15px rgba(31,142,241,0.6);
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
       margin-bottom: 40px;
+      animation: pulse 2s infinite;
     }
     a.button:hover {
       background: #4ea0fc;
       box-shadow: 0 6px 25px rgba(31,142,241,0.9);
+    }
+    dl {
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      animation: fadeIn 2s ease;
+    }
+    dl dd {
+      margin-bottom: 8px;
     }
     .social-links {
       display: flex;
@@ -61,7 +80,7 @@
       margin-top: 20px;
     }
     .social-links a {
-      font-size: 36px;
+      font-size: 30px;
       color: #f0f4f8;
       text-decoration: none;
       display: flex;
@@ -75,9 +94,8 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
     .social-links a:hover {
-      background: #1f8ef1;
       color: white;
-      box-shadow: 0 0 20px #1f8ef1;
+      box-shadow: 0 0 20px;
     }
     .social-links a.facebook:hover {
       background: #3b5998;
@@ -87,7 +105,10 @@
       background: #000;
       box-shadow: 0 0 20px #000;
     }
-    /* Footer styling */
+    .social-links a.whatsapp:hover {
+      background: #25D366;
+      box-shadow: 0 0 20px #25D366;
+    }
     footer {
       position: fixed;
       bottom: 10px;
@@ -101,14 +122,40 @@
       font-family: Arial, sans-serif;
       text-shadow: 0 0 4px rgba(0,0,0,0.5);
     }
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
   </style>
 </head>
 <body>
+  <h1>අංගුලිමාල ජාතක පුවත</h1>
+  <h3>රැගත්</h3>
+  <h2>Digital තොරණ</h2>
+  <p>අංගුලිමාල ජාතක පුවත රැගත් ඞිජිටල් තොරණ් රාජයා දැක ඔබත් පිං සිතුවිලි උපදවා ගනිත්වා.</p>
+  <p><font color="yellow">විරිදු සුරල් සහ රූප සටහන් වල හිමිකම මුල් හිමිකරුවන් සතුවේ.</font></p>
 
-  <h1>README පිටුව</h1>
-  <p>මෙම පිටුව ඔබගේ project එක ගැන විස්තර සහ උපදෙස් අඩංගු වේ.</p>
+  <dl>
+    <dd>විරිදු සුරල් ගායනය - M.V ගුණදාස ශූරීන්.</dd>
+    <dd>ඡායාරූප - අන්තර්ජාලයෙනි.</dd>
+    <dd>ආලෝක රටා සහ වෙබ් නිර්මාණය - තිලින ආනන්ද.</dd>
+  </dl>
 
-  <a href="index.html" class="button">ප්‍රධාන පිටුවට ආපසු යන්න</a>
+  <br><br>
+  <a href="index.html" class="button">නැවත තොරණ වෙත පිවිසෙන්න</a>
 
   <div class="social-links" aria-label="Social Media Links">
     <a href="https://www.facebook.com/profile.php?id=61552332803796" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="facebook">
@@ -117,11 +164,13 @@
     <a href="https://vm.tiktok.com/ZSSVar6r3/" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="tiktok">
       <i class="fa-brands fa-tiktok"></i>
     </a>
+    <a href="https://wa.me/94771234567" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="whatsapp">
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
   </div>
 
   <footer>
-    © 2025 Thilina Annda. All rights reserved.
+    © 2025 Thilina Ananda. All rights reserved.
   </footer>
-
 </body>
 </html>
