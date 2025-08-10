@@ -10,7 +10,7 @@
     body{
       height:100%;
       background:#000;
-      overflow:hidden;
+      overflow-y:auto; /* mobile scroll enable */
       font-family: Arial, Helvetica, sans-serif;
       color:#fff;
       position: relative;
@@ -22,7 +22,8 @@
     }
     .controls{
       position:fixed;
-      top:12px;right:12px;
+      top:12px;
+      right:12px;
       z-index:10;
       display:flex;
       gap:8px;
@@ -37,21 +38,10 @@
       padding:6px 10px;
       border-radius:6px;
       cursor:pointer;
-      font-size: 16px;
     }
     #tapOverlay{
-      position:fixed;
-      inset:0;
-      z-index:20;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(0,0,0,0.65);
-      text-align:center;
-      padding:24px;
-      gap:12px;
-      flex-direction:column;
-      font-size:18px;
+      position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+      background:rgba(0,0,0,0.65);text-align:center;padding:24px;gap:12px;flex-direction:column;font-size:18px
     }
     #tapOverlay.hidden{display:none}
     #tapOverlay button{
@@ -160,38 +150,10 @@
       color: #fff;
     }
 
-    /* MOBILE RESPONSIVE STYLES */
+    /* Mobile hide controls */
     @media (max-width: 600px) {
       .controls {
-        top: auto;
-        bottom: 12px;
-        right: 50%;
-        transform: translateX(50%);
-        flex-wrap: wrap;
-        gap: 6px;
-        padding: 6px;
-      }
-
-      .controls button {
-        padding: 10px 14px;
-        font-size: 14px;
-      }
-
-      #tapOverlay {
-        font-size: 16px;
-        padding: 20px;
-      }
-
-      #readme-link {
-        bottom: 70px;
-        right: 50%;
-        transform: translateX(50%);
-        padding: 8px 12px;
-        font-size: 12px;
-      }
-
-      .bg img {
-        object-fit: contain;
+        display: none !important;
       }
     }
   </style>
