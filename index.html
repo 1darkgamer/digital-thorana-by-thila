@@ -1,313 +1,181 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Digital thorana</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      height:100%;
-      background:#000;
-      overflow-y:auto; /* mobile scroll enable */
-      font-family: Arial, Helvetica, sans-serif;
-      color:#fff;
-      position: relative;
-    }
-    .bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;}
-    .bg img{
-      width:100%;height:100%;object-fit:cover;
-      -webkit-user-drag:none;user-drag:none;user-select:none;pointer-events:none;
-    }
-    .controls{
-      position:fixed;
-      top:12px;
-      right:12px;
-      z-index:10;
-      display:flex;
-      gap:8px;
-      background:rgba(0,0,0,0.35);
-      padding:6px;
-      border-radius:8px;
-    }
-    .controls button{
-      border:1px solid rgba(255,255,255,0.12);
-      background:transparent;
-      color:#fff;
-      padding:6px 10px;
-      border-radius:6px;
-      cursor:pointer;
-    }
-    #tapOverlay{
-      position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
-      background:rgba(0,0,0,0.65);text-align:center;padding:24px;gap:12px;flex-direction:column;font-size:18px
-    }
-    #tapOverlay.hidden{display:none}
-    #tapOverlay button{
-      padding:12px 20px;
-      border-radius:8px;
-      background:#1f8ef1;
-      color:#fff;
-      border:none;
-      font-size:16px;
-      cursor:pointer;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Thorana</title>
+<style>
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-    /* Hide the hint div */
-    .hint {
-      display: none !important;
-    }
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+  }
 
-    /* Snow container */
-    #snow {
-      pointer-events: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 15;
-      overflow: visible;
-    }
-    .snowflake {
-      position: absolute;
-      top: -10px;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      filter: drop-shadow(0 0 2px #fff);
-      animation-name: fall;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
-    @keyframes fall {
-      0% {
-        transform: translateY(0) translateX(0);
-        opacity: 0.8;
-      }
-      100% {
-        transform: translateY(100vh) translateX(20px);
-        opacity: 0.2;
-      }
-    }
+  /* Background GIF */
+  .bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('your-thorana.gif') no-repeat center center;
+    background-size: cover;
+    z-index: -2;
+  }
 
-    /* Fog layers */
+  /* Fog effect */
+  #fog1, #fog2 {
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    opacity: 0.12;
+    pointer-events: none;
+    animation: fogAnim 60s linear infinite;
+    background: url('fog.png') repeat;
+    z-index: -1;
+  }
+
+  #fog2 {
+    animation-duration: 120s;
+  }
+
+  @keyframes fogAnim {
+    from { transform: translateX(0); }
+    to { transform: translateX(50%); }
+  }
+
+  /* Snow effect */
+  .snowflake {
+    position: fixed;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: fall linear infinite;
+    z-index: 3;
+  }
+
+  @keyframes fall {
+    to { transform: translateY(100vh); }
+  }
+
+  /* Tap overlay */
+  #tapOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 4;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #tapOverlay button {
+    background: #ffcc00;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+
+  /* README link */
+  #readme-link {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    z-index: 5;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 600px) {
+    /* Reduce fog opacity */
     #fog1, #fog2 {
-      position: fixed;
-      top: 0; left: 0;
-      width: 150%;
-      height: 150%;
-      pointer-events: none;
-      z-index: 12;
-      background: radial-gradient(circle, rgba(255,255,255,0.12) 30%, transparent 70%);
-      filter: blur(30px);
-      opacity: 0.15;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
-    #fog1 {
-      animation-name: fogMove1;
-      animation-duration: 60s;
-      animation-direction: alternate;
-    }
-    #fog2 {
-      animation-name: fogMove2;
-      animation-duration: 90s;
-      animation-direction: alternate;
-      background: radial-gradient(circle, rgba(255,255,255,0.08) 30%, transparent 70%);
-      filter: blur(40px);
-      opacity: 0.1;
-      top: -10%;
-      left: -10%;
+      opacity: 0.08;
     }
 
-    @keyframes fogMove1 {
-      0% { transform: translateX(0) translateY(0) scale(1); }
-      100% { transform: translateX(30px) translateY(20px) scale(1.05); }
-    }
-    @keyframes fogMove2 {
-      0% { transform: translateX(0) translateY(0) scale(1); }
-      100% { transform: translateX(-40px) translateY(30px) scale(1.1); }
+    /* Reduce snow size */
+    .snowflake {
+      width: 4px !important;
+      height: 4px !important;
     }
 
-    /* README link styling */
-    #readme-link {
-      position: fixed;
-      bottom: 12px;
-      right: 12px;
-      z-index: 30;
-      background: rgba(0,0,0,0.5);
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: bold;
+    /* Smaller overlay text */
+    #tapOverlay {
+      font-size: 15px;
+    }
+
+    #tapOverlay button {
       font-size: 14px;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-    }
-    #readme-link:hover {
-      background: rgba(31,142,241,0.8);
-      color: #fff;
+      padding: 10px 16px;
     }
 
-    /* Mobile Responsive Styles */
-    @media (max-width: 600px) {
-      /* Background fit */
-      .bg img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-      }
-      /* Hide controls */
-      .controls {
-        display: none !important;
-      }
-      /* Overlay text/button smaller */
-      #tapOverlay {
-        font-size: 16px;
-        padding: 16px;
-      }
-      #tapOverlay button {
-        font-size: 14px;
-        padding: 10px 16px;
-      }
-      /* README link smaller */
-      #readme-link {
-        font-size: 12px;
-        padding: 8px 12px;
-      }
-      /* Reduce snow size */
-      .snowflake {
-        width: 4px !important;
-        height: 4px !important;
-      }
-      /* Reduce fog opacity */
-      #fog1, #fog2 {
-        opacity: 0.08;
-      }
+    /* Smaller README link */
+    #readme-link {
+      font-size: 12px;
+      padding: 8px 12px;
     }
-
-    @media (min-width: 601px) and (max-width: 1024px) {
-      #tapOverlay {
-        font-size: 17px;
-      }
-      #readme-link {
-        font-size: 13px;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
-  <div class="bg">
-    <img id="theGif" src="sdf3.gif" alt="Background GIF" draggable="false">
-  </div>
+<div class="bg"></div>
+<div id="fog1"></div>
+<div id="fog2"></div>
 
-  <audio id="bgAudio" src="angulimala.m4a" preload="auto" loop></audio>
+<!-- Snow generation -->
+<script>
+function createSnowflakes() {
+  const snowflakeCount = window.innerWidth < 600 ? 20 : 40;
+  for (let i = 0; i < snowflakeCount; i++) {
+    let snowflake = document.createElement('div');
+    snowflake.className = 'snowflake';
+    snowflake.style.width = snowflake.style.height = Math.random() * 6 + 2 + 'px';
+    snowflake.style.left = Math.random() * 100 + 'vw';
+    snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+    snowflake.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(snowflake);
+  }
+}
+createSnowflakes();
+</script>
 
-  <div class="controls" aria-hidden>
-    <button id="playBtn">Play</button>
-    <button id="pauseBtn">Pause</button>
-    <button id="muteBtn">Mute</button>
-  </div>
+<!-- Tap to start overlay -->
+<div id="tapOverlay">
+  <h2>Welcome to Digital Thorana 🎇</h2>
+  <p>Tap to start the show!</p>
+  <button onclick="startShow()">Start</button>
+</div>
 
-  <div id="tapOverlay" class="hidden" role="dialog" aria-modal="true">
-    <div>Autoplay blocked by browser.<br>කතා වස්තුව ශ්‍රවනය කිරීමට මෙතන ටැප් කරන්න.</div>
-    <button id="tapToPlay">Tap to Play</button>
-    <small style="opacity:0.9">(ඔබට අවශ්‍යනම් mute කරලා play කරන්න.)</small>
-  </div>
+<a id="readme-link" href="README.html" target="_blank">View README</a>
 
-  <!-- Hidden hint div -->
-  <div class="hint">Long-press / right-click disabled.</div>
-
-  <!-- Snow container -->
-  <div id="snow"></div>
-
-  <!-- Fog layers -->
-  <div id="fog1"></div>
-  <div id="fog2"></div>
-
-  <!-- README link -->
-  <a href="readme.html" id="readme-link" target="_blank" rel="noopener noreferrer">README පිටුවට යන්න</a>
-
-  <script>
-    // Prevent right-click / drag / select
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('dragstart', e => e.preventDefault());
-    document.addEventListener('selectstart', e => e.preventDefault());
-
-    const audio = document.getElementById('bgAudio');
-    const overlay = document.getElementById('tapOverlay');
-    const tapBtn = document.getElementById('tapToPlay');
-    const playBtn = document.getElementById('playBtn');
-    const pauseBtn = document.getElementById('pauseBtn');
-    const muteBtn = document.getElementById('muteBtn');
-    const snowContainer = document.getElementById('snow');
-
-    audio.volume = 0.7;
-
-    function tryAutoPlay() {
-      audio.play().then(() => {
-        overlay.classList.add('hidden');
-      }).catch(() => {
-        overlay.classList.remove('hidden');
-      });
-    }
-
-    function userStartPlayback() {
-      audio.play().then(() => overlay.classList.add('hidden'));
-    }
-
-    function addGestureListeners() {
-      const start = () => {
-        userStartPlayback();
-        window.removeEventListener('click', start);
-        window.removeEventListener('touchstart', start);
-        window.removeEventListener('keydown', start);
-      };
-      window.addEventListener('click', start, { once: true });
-      window.addEventListener('touchstart', start, { once: true });
-      window.addEventListener('keydown', start, { once: true });
-    }
-
-    tapBtn.addEventListener('click', userStartPlayback);
-    playBtn.addEventListener('click', () => audio.play().catch(() => {}));
-    pauseBtn.addEventListener('click', () => audio.pause());
-    muteBtn.addEventListener('click', () => {
-      audio.muted = !audio.muted;
-      muteBtn.textContent = audio.muted ? 'Unmute' : 'Mute';
-    });
-
-    // Create snowflakes
-    function createSnowflake() {
-      const snowflake = document.createElement('div');
-      snowflake.classList.add('snowflake');
-      const size = Math.random() * 7 + 5;
-      snowflake.style.width = size + 'px';
-      snowflake.style.height = size + 'px';
-      snowflake.style.left = Math.random() * 100 + 'vw';
-      const duration = Math.random() * 9 + 6;
-      snowflake.style.animationDuration = duration + 's';
-      snowflake.style.animationDelay = '-' + Math.random() * duration + 's';
-
-      snowContainer.appendChild(snowflake);
-
-      setTimeout(() => {
-        snowflake.remove();
-      }, duration * 1000);
-    }
-
-    function snowFall() {
-      createSnowflake();
-      setTimeout(snowFall, 150);
-    }
-
-    window.addEventListener('load', () => {
-      tryAutoPlay();
-      addGestureListeners();
-      snowFall();
-    });
-  </script>
+<script>
+function startShow() {
+  document.getElementById('tapOverlay').style.display = 'none';
+}
+</script>
 
 </body>
 </html>
