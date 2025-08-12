@@ -202,15 +202,29 @@
       body {
         overflow: hidden;
         position: fixed;
-        width: 100%;
+        width: 100vw;
         height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
+      }
+      
+      .bg {
+        width: 100vw;
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
       }
       
       .bg img {
         object-fit: cover;
-        width: 100vw;
-        height: 100vh;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: calc(var(--vh, 1vh) * 100) !important;
         object-position: center center;
+        min-width: 100vw;
+        min-height: 100vh;
+        min-height: calc(var(--vh, 1vh) * 100);
+        max-width: none;
+        max-height: none;
+        transform: scale(1.01);
       }
       
       .controls {
@@ -271,6 +285,18 @@
 
     /* Extra small mobile devices */
     @media (max-width: 480px) {
+      .bg img {
+        width: 100vw !important;
+        height: 100vh !important;
+        height: calc(var(--vh, 1vh) * 100) !important;
+        object-fit: cover;
+        object-position: center;
+        transform: scale(1.02);
+        min-width: 100vw;
+        min-height: 100vh;
+        min-height: calc(var(--vh, 1vh) * 100);
+      }
+      
       .controls button {
         padding: 6px 10px;
         font-size: 11px;
@@ -306,8 +332,14 @@
     @media (max-width: 768px) and (orientation: landscape) {
       .bg img {
         object-fit: cover;
-        width: 100vw;
-        height: 100vh;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: calc(var(--vh, 1vh) * 100) !important;
+        object-position: center;
+        transform: scale(1.01);
+        min-width: 100vw;
+        min-height: 100vh;
+        min-height: calc(var(--vh, 1vh) * 100);
       }
       
       .controls {
@@ -356,7 +388,12 @@
     <img id="theGif" src="sdf3.gif" alt="Background GIF" draggable="false">
   </div>
 
-  <audio id="bgAudio" src="angulimala.m4a" preload="auto" loop></audio>
+  <audio id="bgAudio" preload="metadata" loop>
+    <source src="angulimala.m4a" type="audio/mp4">
+    <source src="angulimala.mp3" type="audio/mpeg">
+    <source src="angulimala.ogg" type="audio/ogg">
+    Your browser does not support the audio element.
+  </audio>
 
   <div class="controls" aria-hidden>
     <button id="playBtn">Play</button>
@@ -553,13 +590,31 @@
     // Handle resize events
     window.addEventListener('resize', () => {
       // Update viewport height for mobile browsers
-      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      
+      // Force image to recalculate dimensions
+      const img = document.getElementById('theGif');
+      if (img) {
+        img.style.width = '100vw';
+        img.style.height = '100vh';
+        img.style.height = `calc(var(--vh, 1vh) * 100)`;
+      }
     });
 
     // Initialize
     window.addEventListener('load', () => {
       // Set viewport height
-      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      
+      // Ensure image fills screen
+      const img = document.getElementById('theGif');
+      if (img) {
+        img.style.width = '100vw';
+        img.style.height = '100vh';
+        img.style.height = `calc(var(--vh, 1vh) * 100)`;
+      }
       
       tryAutoPlay();
       addGestureListeners();
