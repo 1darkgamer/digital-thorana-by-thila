@@ -2,23 +2,41 @@
 <html lang="si">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Digital thorana</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    html,body{height:100%}
+    html,body{height:100%;overflow:hidden}
     body{
-      height:100%;
+      height:100vh;
       background:#000;
-      overflow-y:auto; /* mobile scroll enable */
       font-family: Arial, Helvetica, sans-serif;
       color:#fff;
       position: relative;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
     }
-    .bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;}
+    .bg{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:1;
+    }
     .bg img{
-      width:100%;height:100%;object-fit:cover;
-      -webkit-user-drag:none;user-drag:none;user-select:none;pointer-events:none;
+      width:100vw;
+      height:100vh;
+      object-fit:cover;
+      -webkit-user-drag:none;
+      user-drag:none;
+      user-select:none;
+      pointer-events:none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
     }
     .controls{
       position:fixed;
@@ -30,6 +48,7 @@
       background:rgba(0,0,0,0.35);
       padding:6px;
       border-radius:8px;
+      backdrop-filter: blur(10px);
     }
     .controls button{
       border:1px solid rgba(255,255,255,0.12);
@@ -38,10 +57,27 @@
       padding:6px 10px;
       border-radius:6px;
       cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .controls button:active{
+      background:rgba(255,255,255,0.1);
+      transform: scale(0.95);
     }
     #tapOverlay{
-      position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
-      background:rgba(0,0,0,0.65);text-align:center;padding:24px;gap:12px;flex-direction:column;font-size:18px
+      position:fixed;
+      inset:0;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,0.65);
+      text-align:center;
+      padding:24px;
+      gap:12px;
+      flex-direction:column;
+      font-size:18px;
+      backdrop-filter: blur(5px);
     }
     #tapOverlay.hidden{display:none}
     #tapOverlay button{
@@ -52,6 +88,13 @@
       border:none;
       font-size:16px;
       cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: all 0.2s ease;
+    }
+    #tapOverlay button:active{
+      transform: scale(0.95);
+      background:#1a7fd4;
     }
 
     /* Hide the hint div */
@@ -65,7 +108,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      height: 100%;
+      height: 100vh;
       z-index: 15;
       overflow: visible;
     }
@@ -79,6 +122,7 @@
       animation-name: fall;
       animation-timing-function: linear;
       animation-iteration-count: infinite;
+      will-change: transform;
     }
     @keyframes fall {
       0% {
@@ -104,6 +148,7 @@
       opacity: 0.15;
       animation-timing-function: linear;
       animation-iteration-count: infinite;
+      will-change: transform;
     }
     #fog1 {
       animation-name: fogMove1;
@@ -144,55 +189,163 @@
       font-size: 14px;
       text-decoration: none;
       transition: background-color 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+      backdrop-filter: blur(10px);
     }
-    #readme-link:hover {
+    #readme-link:hover, #readme-link:active {
       background: rgba(31,142,241,0.8);
       color: #fff;
     }
 
     /* Mobile Responsive Styles */
-    @media (max-width: 600px) {
-      /* Background fit */
+    @media (max-width: 768px) {
+      body {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+      }
+      
       .bg img {
         object-fit: cover;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
+        object-position: center center;
       }
-      /* Hide controls */
+      
       .controls {
-        display: none !important;
+        top: 8px;
+        right: 8px;
+        gap: 6px;
+        padding: 4px;
+        border-radius: 6px;
       }
-      /* Overlay text/button smaller */
+      
+      .controls button {
+        padding: 8px 12px;
+        font-size: 12px;
+        border-radius: 4px;
+        min-width: 44px;
+        min-height: 44px;
+      }
+      
       #tapOverlay {
         font-size: 16px;
-        padding: 16px;
+        padding: 20px 16px;
+        gap: 16px;
       }
+      
       #tapOverlay button {
-        font-size: 14px;
-        padding: 10px 16px;
+        font-size: 16px;
+        padding: 14px 24px;
+        min-width: 200px;
+        min-height: 48px;
+        border-radius: 12px;
       }
-      /* README link smaller */
+      
       #readme-link {
+        bottom: 8px;
+        right: 8px;
         font-size: 12px;
         padding: 8px 12px;
+        border-radius: 6px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
       }
-      /* Reduce snow size */
+      
       .snowflake {
-        width: 4px !important;
-        height: 4px !important;
+        width: 3px !important;
+        height: 3px !important;
       }
-      /* Reduce fog opacity */
+      
       #fog1, #fog2 {
-        opacity: 0.08;
+        opacity: 0.06;
+        filter: blur(20px);
+      }
+      
+      #snow {
+        height: 100vh;
       }
     }
 
-    @media (min-width: 601px) and (max-width: 1024px) {
+    /* Extra small mobile devices */
+    @media (max-width: 480px) {
+      .controls button {
+        padding: 6px 10px;
+        font-size: 11px;
+        min-width: 40px;
+        min-height: 40px;
+      }
+      
+      #tapOverlay {
+        font-size: 14px;
+        padding: 16px 12px;
+      }
+      
+      #tapOverlay button {
+        font-size: 14px;
+        padding: 12px 20px;
+        min-width: 180px;
+        min-height: 44px;
+      }
+      
+      #readme-link {
+        font-size: 11px;
+        padding: 6px 10px;
+        min-height: 32px;
+      }
+      
+      .snowflake {
+        width: 2px !important;
+        height: 2px !important;
+      }
+    }
+
+    /* Landscape orientation for mobile */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .bg img {
+        object-fit: cover;
+        width: 100vw;
+        height: 100vh;
+      }
+      
+      .controls {
+        top: 6px;
+        right: 6px;
+      }
+      
+      #readme-link {
+        bottom: 6px;
+        right: 6px;
+      }
+    }
+
+    /* Tablet styles */
+    @media (min-width: 769px) and (max-width: 1024px) {
       #tapOverlay {
         font-size: 17px;
       }
       #readme-link {
         font-size: 13px;
+      }
+    }
+
+    /* Prevent zoom on double tap */
+    * {
+      touch-action: manipulation;
+    }
+
+    /* iOS specific fixes */
+    @supports (-webkit-touch-callout: none) {
+      body {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: none;
+      }
+      
+      .bg img {
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
       }
     }
   </style>
@@ -236,6 +389,22 @@
     document.addEventListener('dragstart', e => e.preventDefault());
     document.addEventListener('selectstart', e => e.preventDefault());
 
+    // Prevent zoom on iOS
+    document.addEventListener('gesturestart', e => e.preventDefault());
+    document.addEventListener('gesturechange', e => e.preventDefault());
+    document.addEventListener('gestureend', e => e.preventDefault());
+
+    // Prevent scroll bounce on iOS
+    document.addEventListener('touchstart', e => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('touchmove', e => {
+      e.preventDefault();
+    }, { passive: false });
+
     const audio = document.getElementById('bgAudio');
     const overlay = document.getElementById('tapOverlay');
     const tapBtn = document.getElementById('tapToPlay');
@@ -271,6 +440,8 @@
     }
 
     tapBtn.addEventListener('click', userStartPlayback);
+    tapBtn.addEventListener('touchend', userStartPlayback);
+    
     playBtn.addEventListener('click', () => audio.play().catch(() => {}));
     pauseBtn.addEventListener('click', () => audio.pause());
     muteBtn.addEventListener('click', () => {
@@ -278,14 +449,21 @@
       muteBtn.textContent = audio.muted ? 'Unmute' : 'Mute';
     });
 
-    // Create snowflakes
+    // Create snowflakes with mobile optimization
     function createSnowflake() {
       const snowflake = document.createElement('div');
       snowflake.classList.add('snowflake');
-      const size = Math.random() * 7 + 5;
+      
+      // Adjust snowflake size based on screen size
+      const isMobile = window.innerWidth <= 768;
+      const baseSize = isMobile ? 3 : 7;
+      const sizeVariation = isMobile ? 2 : 5;
+      const size = Math.random() * sizeVariation + baseSize;
+      
       snowflake.style.width = size + 'px';
       snowflake.style.height = size + 'px';
       snowflake.style.left = Math.random() * 100 + 'vw';
+      
       const duration = Math.random() * 9 + 6;
       snowflake.style.animationDuration = duration + 's';
       snowflake.style.animationDelay = '-' + Math.random() * duration + 's';
@@ -293,19 +471,60 @@
       snowContainer.appendChild(snowflake);
 
       setTimeout(() => {
-        snowflake.remove();
+        if (snowflake && snowflake.parentNode) {
+          snowflake.remove();
+        }
       }, duration * 1000);
     }
 
     function snowFall() {
       createSnowflake();
-      setTimeout(snowFall, 150);
+      // Reduce snowflake frequency on mobile for better performance
+      const isMobile = window.innerWidth <= 768;
+      const interval = isMobile ? 200 : 150;
+      setTimeout(snowFall, interval);
     }
 
+    // Handle orientation changes
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        // Force a repaint after orientation change
+        document.body.style.display = 'none';
+        document.body.offsetHeight; // Trigger reflow
+        document.body.style.display = '';
+      }, 100);
+    });
+
+    // Handle resize events
+    window.addEventListener('resize', () => {
+      // Update viewport height for mobile browsers
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    });
+
+    // Initialize
     window.addEventListener('load', () => {
+      // Set viewport height
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      
       tryAutoPlay();
       addGestureListeners();
       snowFall();
+    });
+
+    // Prevent context menu on long press for mobile
+    let longPressTimer;
+    document.addEventListener('touchstart', (e) => {
+      longPressTimer = setTimeout(() => {
+        e.preventDefault();
+      }, 500);
+    });
+
+    document.addEventListener('touchend', () => {
+      clearTimeout(longPressTimer);
+    });
+
+    document.addEventListener('touchcancel', () => {
+      clearTimeout(longPressTimer);
     });
   </script>
 
