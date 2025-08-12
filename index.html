@@ -26,20 +26,11 @@
       align-items:center;
       justify-content:center;
       z-index:1;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
     }
     .bg img{
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      min-width: 100vw;
-      min-height: 100vh;
-      width: auto;
-      height: auto;
-      object-fit: cover;
+      width:100vw;
+      height:100vh;
+      object-fit:cover;
       -webkit-user-drag:none;
       user-drag:none;
       user-select:none;
@@ -208,55 +199,18 @@
 
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
-      html, body {
-        width: 100vw;
-        height: 100vh;
-        height: -webkit-fill-available;
-        overflow: hidden;
-        position: fixed;
-      }
-      
       body {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
         height: 100vh;
-        height: calc(var(--vh, 1vh) * 100);
-        height: -webkit-fill-available;
-        overscroll-behavior: none;
       }
       
-      .bg {
+      .bg img {
+        object-fit: cover;
         width: 100vw;
         height: 100vh;
-        height: calc(var(--vh, 1vh) * 100);
-        height: -webkit-fill-available;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: hidden;
-      }
-      
-      .bg img {
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        min-width: 102vw !important;
-        min-height: 102vh !important;
-        min-height: calc(var(--vh, 1vh) * 102) !important;
-        width: auto !important;
-        height: auto !important;
-        max-width: none !important;
-        max-height: none !important;
-        object-fit: cover !important;
-        object-position: center center !important;
-      }
-      
-      /* Alternative fallback */
-      .bg img {
-        width: 102vw !important;
-        height: 102vh !important;
-        height: calc(var(--vh, 1vh) * 102) !important;
+        object-position: center center;
       }
       
       .controls {
@@ -265,8 +219,6 @@
         gap: 6px;
         padding: 4px;
         border-radius: 6px;
-        position: fixed;
-        z-index: 100;
       }
       
       .controls button {
@@ -319,29 +271,6 @@
 
     /* Extra small mobile devices */
     @media (max-width: 480px) {
-      .bg {
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
-      }
-      
-      .bg img {
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        min-width: 103vw !important;
-        min-height: 103vh !important;
-        min-height: calc(var(--vh, 1vh) * 103) !important;
-        width: 103vw !important;
-        height: 103vh !important;
-        height: calc(var(--vh, 1vh) * 103) !important;
-        object-fit: cover !important;
-        object-position: center !important;
-      }
-      
       .controls button {
         padding: 6px 10px;
         font-size: 11px;
@@ -375,23 +304,10 @@
 
     /* Landscape orientation for mobile */
     @media (max-width: 768px) and (orientation: landscape) {
-      .bg {
-        width: 100vw !important;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
-      }
-      
       .bg img {
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        min-width: 102vw !important;
-        min-height: 102vh !important;
-        width: 102vw !important;
-        height: 102vh !important;
-        object-fit: cover !important;
-        object-position: center !important;
+        object-fit: cover;
+        width: 100vw;
+        height: 100vh;
       }
       
       .controls {
@@ -642,48 +558,13 @@
     // Handle resize events
     window.addEventListener('resize', () => {
       // Update viewport height for mobile browsers
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-      
-      // Force image to fill screen completely
-      const img = document.getElementById('theGif');
-      if (img && window.innerWidth <= 768) {
-        // Mobile specific adjustments
-        img.style.position = 'absolute';
-        img.style.top = '50%';
-        img.style.left = '50%';
-        img.style.transform = 'translate(-50%, -50%)';
-        img.style.minWidth = '102vw';
-        img.style.minHeight = '102vh';
-        img.style.width = '102vw';
-        img.style.height = '102vh';
-        img.style.objectFit = 'cover';
-        img.style.objectPosition = 'center';
-      }
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
     });
 
     // Initialize
     window.addEventListener('load', () => {
       // Set viewport height
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-      
-      // Mobile specific image setup
-      const img = document.getElementById('theGif');
-      if (img && window.innerWidth <= 768) {
-        setTimeout(() => {
-          img.style.position = 'absolute';
-          img.style.top = '50%';
-          img.style.left = '50%';
-          img.style.transform = 'translate(-50%, -50%)';
-          img.style.minWidth = '102vw';
-          img.style.minHeight = '102vh';
-          img.style.width = '102vw';
-          img.style.height = '102vh';
-          img.style.objectFit = 'cover';
-          img.style.objectPosition = 'center';
-        }, 100);
-      }
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
       
       tryAutoPlay();
       addGestureListeners();
