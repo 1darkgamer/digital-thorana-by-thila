@@ -416,38 +416,93 @@
     audio.volume = 0.7;
 
     function tryAutoPlay() {
-      audio.play().then(() => {
-        overlay.classList.add('hidden');
-      }).catch(() => {
+      // Check if audio can be played
+      if (audio.readyState >= 2) {
+        audio.play().then(() => {
+          console.log('Audio playing automatically');
+          overlay.classList.add('hidden');
+        }).catch(error => {
+          console.log('Autoplay failed:', error);
+          overlay.classList.remove('hidden');
+        });
+      } else {
+        // Wait for audio to load
+        audio.addEventListener('canplaythrough', () => {
+          audio.play().then(() => {
+            overlay.classList.add('hidden');
+          }).catch(() => {
+            overlay.classList.remove('hidden');
+          });
+        }, { once: true });
         overlay.classList.remove('hidden');
-      });
+      }
     }
 
     function userStartPlayback() {
-      audio.play().then(() => overlay.classList.add('hidden'));
+      audio.currentTime = 0; // Reset to beginning
+      audio.play().then(() => {
+        console.log('Audio started by user interaction');
+        overlay.classList.add('hidden');
+      }).catch(error => {
+        console.error('Audio play failed:', error);
+        alert('Audio play කරන්න බැරි වුණා. File එක check කරන්න.');
+      });
     }
 
     function addGestureListeners() {
-      const start = () => {
+      const start = (e) => {
+        e.preventDefault();
         userStartPlayback();
         window.removeEventListener('click', start);
         window.removeEventListener('touchstart', start);
         window.removeEventListener('keydown', start);
       };
-      window.addEventListener('click', start, { once: true });
-      window.addEventListener('touchstart', start, { once: true });
+      window.addEventListener('click', start, { once: true, passive: false });
+      window.addEventListener('touchstart', start, { once: true, passive: false });
       window.addEventListener('keydown', start, { once: true });
     }
 
-    tapBtn.addEventListener('click', userStartPlayback);
-    tapBtn.addEventListener('touchend', userStartPlayback);
+    // Enhanced button event listeners
+    tapBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      userStartPlayback();
+    });
+    tapBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      userStartPlayback();
+    });
     
-    playBtn.addEventListener('click', () => audio.play().catch(() => {}));
-    pauseBtn.addEventListener('click', () => audio.pause());
+    playBtn.addEventListener('click', () => {
+      audio.play().then(() => {
+        console.log('Play button clicked - audio started');
+      }).catch(error => {
+        console.error('Play failed:', error);
+        alert('Play කරන්න බැරි වුණා');
+      });
+    });
+    
+    pauseBtn.addEventListener('click', () => {
+      audio.pause();
+      console.log('Audio paused');
+    });
+    
     muteBtn.addEventListener('click', () => {
       audio.muted = !audio.muted;
       muteBtn.textContent = audio.muted ? 'Unmute' : 'Mute';
+      console.log('Audio muted:', audio.muted);
     });
+
+    // Audio event listeners for debugging
+    audio.addEventListener('loadstart', () => console.log('Audio loading started'));
+    audio.addEventListener('canplay', () => console.log('Audio can start playing'));
+    audio.addEventListener('canplaythrough', () => console.log('Audio can play through'));
+    audio.addEventListener('error', (e) => {
+      console.error('Audio error:', e);
+      alert('Audio file load කරන්න බැරි වුණා. angulimala.m4a file එක තිබෙනවද check කරන්න.');
+    });
+    audio.addEventListener('play', () => console.log('Audio started playing'));
+    audio.addEventListener('pause', () => console.log('Audio paused'));
+    audio.addEventListener('ended', () => console.log('Audio ended'));
 
     // Create snowflakes with mobile optimization
     function createSnowflake() {
