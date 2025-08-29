@@ -33,7 +33,7 @@
       text-shadow: 0 0 10px #1f8ef1;
       animation: fadeInDown 1.5s ease;
     }
-    h2, h3 {
+    h2, h3, h4 {
       animation: fadeInUp 1.5s ease;
     }
     p {
@@ -107,6 +107,42 @@
       background: #25D366;
       box-shadow: 0 0 20px #25D366;
     }
+    .social-links a.chat {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+    .social-links a.chat:hover {
+      background: rgba(255, 107, 107, 0.2) !important;
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3) !important;
+    }
+    
+    /* Chat icon floating button */
+    .chat-float {
+      position: fixed;
+      top: 50%;
+      right: 30px;
+      transform: translateY(-50%);
+      z-index: 1000;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      text-decoration: none;
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .chat-float:hover {
+      transform: translateY(-50%) scale(1.1);
+      background: #FF6B6B;
+      box-shadow: 0 0 20px #FF6B6B;
+    }
+    
     footer {
       position: fixed;
       bottom: 10px;
@@ -138,6 +174,16 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
+    @keyframes chatPulse {
+      0%, 100% { 
+        transform: translateY(-50%) scale(1);
+        box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+      }
+      50% { 
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+      }
+    }
 
     /* Mobile responsive styles */
     @media (max-width: 600px) {
@@ -161,16 +207,22 @@
         height: 44px;
         font-size: 22px;
       }
+      .chat-float {
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
       footer {
         font-size: 0.75rem;
       }
     }
   </style>
 </head>
-<body>
-  <h1>අංගුලිමාල ජාතක පුවත</h1>
+<h1>අංගුලිමාල ජාතක පුවත</h1>
   <h3>රැගත්</h3>
   <h2>Digital තොරණ</h2>
+  <h4>ගා/ඇත්කදුර සීවලී මහා විද්‍යාලය විසින් ප්‍රථම වරට ඉදිරිපත් කරන</h4>
   <p>අංගුලිමාල ජාතක පුවත රැගත් ඞිජිටල් තොරණ් රාජයා දැක ඔබත් පිං සිතුවිලි උපදවා ගනිත්වා.</p>
   <p><font color="yellow">විරිදු සුරල් සහ රූප සටහන් වල හිමිකම මුල් හිමිකරුවන් සතුවේ.</font></p>
 
@@ -195,9 +247,26 @@
     </a>
   </div>
 
+  <!-- Floating Chat Button -->
+  <a href="#" onclick="openChat()" class="chat-float" title="Chat එකට යන්න">
+    <img src="-7746765.webp" alt="Chat Icon" style="width: 30px; height: 30px; border-radius: 50%;">
+  </a>
+
   <footer>
-    © 2025 Thilina Ananda. All rights reserved.
+    © 2025 ESMV. All rights reserved.
   </footer>
+
+  <script>
+    function openChat() {
+      // ඔබේ chat URL එක මෙතන දාන්න
+      window.open('https://1thilina.github.io/chat-bot/', '_blank');
+      
+      // Or if you want to open in same tab:
+      // window.location.href = 'https://your-chat-url.com';
+      
+      // Or if you have a specific chat page:
+      // window.location.href = 'chat.html';
+    }
+  </script>
 </body>
 </html>
-
